@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Task } from 'src/app/models/task.model';
+import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AddUpdateTaskComponent } from 'src/app/shared/components/add-update-task/add-update-task.component';
@@ -13,69 +14,118 @@ import { AddUpdateTaskComponent } from 'src/app/shared/components/add-update-tas
 export class HomePage implements OnInit {
 
 
-
-  tasks: Task[] = [
-    {
-      id: '1',
-      title: 'Autenticacion Con Google',
-      description: 'Crear una funcion que permita autenticar con google',
-      items: [
-        { name: 'Actividad 1', completed: true },
-        { name: 'Actividad 2', completed: true },
-        { name: 'Actividad 3', completed: true },
-      ],
-    },
-
-    {
-      id: '2',
-      title: 'Autenticacion Con Google',
-      description: 'Crear una funcion que permita autenticar con google',
-      items: [
-        { name: 'Actividad 1', completed: true },
-        { name: 'Actividad 2', completed: true },
-        { name: 'Actividad 3', completed: false },
-      ],
-    },
-    {
-      id: '3',
-      title: 'Autenticacion Con Google',
-      description: 'Crear una funcion que permita autenticar con google',
-      items: [
-        { name: 'Actividad 1', completed: true },
-        { name: 'Actividad 2', completed: false },
-        { name: 'Actividad 3', completed: false },
-      ],
-    },
-  ];
-
-
+  user = {} as User;
+  tasks: Task[] = [];
 
   constructor(
-    private firebaseService: FirebaseService,
-    private utilsService: UtilsService,
+    private firebasSvc: FirebaseService,
+    private utilsSvc: UtilsService,
   ) { }
 
   ngOnInit() {
 
-    this.addOrUpdatetask(this.tasks[0])
+  }
+
+  ionViewWillEnter() {
+    this.getTasks();
+    this.getUser();
+  }
+
+
+  getUser() {
+    return this.user = this.utilsSvc.getElementFromLocalStorage('user')
   }
 
   getPercentage(task: Task) {
-    return this.utilsService.getPercentage(task);
+    return this.utilsSvc.getPercentage(task);
 
   }
 
 
 
-  addOrUpdatetask(task?: Task) {
-    this.utilsService.presentModal({
+  async addOrUpdatetask(task?: Task) {
+    let res = await this.utilsSvc.presentModal({
       component: AddUpdateTaskComponent,
-      componentProps: { task },
+      componentProps: {
+        task
+      },
       cssClass: 'add-update-modal'
+    })
+
+    if (res && res.success) {
+      this.getTasks();
+    }
+  }
+
+
+  getTasks() {
+
+    let user: User = this.utilsSvc.getElementFromLocalStorage('user');
+    let path = `users/${user.uid}`
+
+
+    this.firebasSvc.getSubCollection(path, 'tasks').subscribe({
+      next: (res: Task[]) => {
+        console.log(res);
+        this.tasks = res;
+      }
     })
   }
 
+  confirmDeletTask(task: Task) {
+    this.utilsSvc.presentAlert({
 
+      header: 'Eliminar Tarea!',
+      message: '¿Quieres eliminar una tarea?',
+      mode: 'ios',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+
+        }, {
+          text: 'Si, Eliminar',
+          handler: () => {
+            this.deleteTask(task);
+
+          }
+        }
+      ]
+    })
+  }
+
+  deleteTask(task: Task) {
+    let path = `users/${this.user.uid}/tasks/${task.id}`;
+
+    this.utilsSvc.presentLoading();
+
+
+    this.firebasSvc.deleteDocument(path).then(res => {
+
+
+      this.utilsSvc.presentToast({
+        message: 'Tarea Eliminada con exito',
+        color: 'success',
+        icon: 'checkmark-circle-outline',
+        duration: 2000,
+      });
+
+      this.getTasks();
+      this.utilsSvc.dismissLoading();
+
+    }, error => {
+
+      this.utilsSvc.presentToast({
+        message: error,
+        color: 'warning',
+        icon: 'alert-circle-outline',
+        duration: 5000,
+      });
+
+      this.utilsSvc.dismissLoading();
+    })
+
+  }
 
 
 

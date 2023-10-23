@@ -41,5 +41,27 @@ export class FirebaseService {
     await this.auth.signOut();
     this.utilsSvc.routerLink('/auth');
     localStorage.removeItem('user');
+
+  }
+  //========CRUD de tareas con Firebase================
+
+  //Leer datos
+  getSubCollection(path: string, subcollectionName: string) {
+    return this.db.doc(path).collection(subcollectionName).valueChanges({ idField: 'id' });
+  }
+
+  //Crear datos 
+  addToSubCollection(path: string, subcollectionName: string, object: any) {
+    return this.db.doc(path).collection(subcollectionName).add(object);
+  }
+
+  //Actualizar datos
+  updateDocument(path: string, object: any) {
+    return this.db.doc(path).update(object);
+  }
+  //
+  deleteDocument(path: string) {
+    return this.db.doc(path).delete();
   }
 }
+

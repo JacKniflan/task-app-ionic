@@ -17,13 +17,13 @@ export class UtilsService {
 
   //==========Cargando ================
   //PRESENTE
-  async presentLoading(opts: LoadingOptions) {
+  async presentLoading(opts?: LoadingOptions) {
     const loading = await this.loadingController.create(opts);
     await loading.present();
   }
   //DISMISS
   async dismissLoading() {
-    await this.loadingController.dismiss();
+    return await this.loadingController.dismiss();
   }
 
   //==========LOCAL STORAGE ================

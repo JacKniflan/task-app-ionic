@@ -30,7 +30,8 @@
                       <ion-icon slot="end" name="eye-outline"></ion-icon>
                     </ion-button>
 
-                    <ion-button class="task-btn" mode="ios" color="danger" size="small">
+                    <ion-button (click)="confirmDeletTask(task)" class="task-btn" mode="ios" color="danger"
+                      size="small">
                       Eliminar Tarea
                       <ion-icon slot="end" name="trash-outline"></ion-icon>
                     </ion-button>

@@ -1,9 +1,9 @@
 <ion-content color="light">
 
-  <app-header color="light" [centerTitle]=true [isModal]=true title="Tareas"></app-header>
+  <app-header color="light" [centerTitle]=true [isModal]=true [title]="task ? 'Actualizar' : 'Crear' "></app-header>
 
 
-  <app-custom-input [control]="form.controls.title" type="text" label="Titulo"></app-custom-input>
+  <app-custom-input [control]=" form.controls.title" type="text" label="Titulo"></app-custom-input>
   <div class="validator" *ngIf="form.controls.title.errors && form.controls.title.dirty">
     <div *ngIf="form.controls.title.errors?.['required']">Este Campo es Requerido</div>
     <div *ngIf="form.controls.title.errors?.['minlength']">Este Campo es Requerido al menos 4 caracteres</div>
@@ -15,22 +15,58 @@
     <div *ngIf="form.controls.description.errors?.['minlength']">Este Campo es Requerido al menos 4 caracteres</div>
   </div>
 
+
+
   <ion-item class="item-heade" line="none">
+
     <ion-label>Actividades</ion-label>
-    <ion-button slot="end" mode="ios">
+    <span slot="end" *ngIf="form.value.items.length">
+      Progreso: {{getPercentage()}}%
+    </span>
+    <ion-button (click)="createItem()" slot="end" mode="ios">
       <ion-icon name="add-circle-outline"></ion-icon>
     </ion-button>
   </ion-item>
 
-  <ion-range [value]=" getPercentage()">
-
-  </ion-range>
+  <ion-range [value]=" getPercentage()"></ion-range>
 
 
+  <ion-reorder-group [disabled]="false" (ionItemReorder)="handleReorder($any($event))">
+
+
+    <div *ngFor="let item of form.value.items; index as i">
+      <ion-item lines="none">
+        <ion-checkbox slot="start" color="success" [(ngModel)]="item.completed"></ion-checkbox>
+        <ion-label class="ion-text-wrap"> {{ item.name }} </ion-label>
+
+        <ion-buttons slot="end">
+          <ion-button (click)="removeItem(i)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-reorder slot="end"></ion-reorder>
+      </ion-item>
+
+      <ion-item class="item-reorder">
+        <ion-label slot="end"></ion-label>
+      </ion-item>
+
+    </div>
+
+
+  </ion-reorder-group>
 
 
 
-
+  <ion-footer>
+    <ion-toolbar>
+      <div class="ion-text-center">
+        <ion-button class="ion-margin" mode="ios" [disabled]="form.invalid" (click)="submit()" shape="round">
+          {{task ? 'Actualizar' : 'Crear'}}
+        </ion-button>
+      </div>
+    </ion-toolbar>
+  </ion-footer>
 
 
 
