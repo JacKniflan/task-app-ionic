@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "task-app-f3271": {
+      "hosting": {
+        "app": [
+          "task-app-f3271"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "task-app-f3271"
+  }
+}

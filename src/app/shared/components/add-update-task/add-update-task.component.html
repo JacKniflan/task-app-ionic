@@ -1,0 +1,37 @@
+<ion-content color="light">
+
+  <app-header color="light" [centerTitle]=true [isModal]=true title="Tareas"></app-header>
+
+
+  <app-custom-input [control]="form.controls.title" type="text" label="Titulo"></app-custom-input>
+  <div class="validator" *ngIf="form.controls.title.errors && form.controls.title.dirty">
+    <div *ngIf="form.controls.title.errors?.['required']">Este Campo es Requerido</div>
+    <div *ngIf="form.controls.title.errors?.['minlength']">Este Campo es Requerido al menos 4 caracteres</div>
+  </div>
+
+  <app-custom-input [control]="form.controls.description" type="textarea" label="Description"></app-custom-input>
+  <div class="validator" *ngIf="form.controls.description.errors && form.controls.description.dirty">
+    <div *ngIf="form.controls.description.errors?.['required']">Este Campo es Requerido</div>
+    <div *ngIf="form.controls.description.errors?.['minlength']">Este Campo es Requerido al menos 4 caracteres</div>
+  </div>
+
+  <ion-item class="item-heade" line="none">
+    <ion-label>Actividades</ion-label>
+    <ion-button slot="end" mode="ios">
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <ion-range [value]=" getPercentage()">
+
+  </ion-range>
+
+
+
+
+
+
+
+
+
+</ion-content>
