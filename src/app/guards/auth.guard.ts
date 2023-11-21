@@ -10,17 +10,17 @@ import { UtilsService } from '../services/utils.service';
 export class AuthGuard implements CanActivate {
 
 
-  constructor(
+  constructor(//Inyectamos los servicios que vamos a utilizar en el guard 
     private firebaseSvc: FirebaseService,
     private utilsSvc: UtilsService
 
 
   ) { }
-  canActivate(
+  canActivate( //Función para verificar si existe un usuario logueado en el sistema 
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    return this.firebaseSvc.getAuthState().pipe(map(auth => {
+    return this.firebaseSvc.getAuthState().pipe(map(auth => { //Obtenemos el estado de la autenticación de firebase 
 
       //Existe un usuario logueado en el sistema 
       if (auth) {

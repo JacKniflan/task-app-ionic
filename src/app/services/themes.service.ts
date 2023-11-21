@@ -7,29 +7,30 @@ import { BehaviorSubject } from 'rxjs';
 export class ThemesService {
 
   darkMode = new BehaviorSubject(false);
-  constructor() { }
+
+  constructor() {
+    this.setInitialTheme();
+  }
 
   setInitialTheme() {
-    let darkMode = localStorage.getItem('darkMode');
+    const darkModeValue = localStorage.getItem('darkMode');
 
-    if (darkMode) {
-      document.body.setAttribute('color-theme', 'dark');
+    // Si el valor de darkMode almacenado en localStorage es true, establece el tema oscuro
+    if (darkModeValue && JSON.parse(darkModeValue)) {
+      this.setTheme(true);
     } else {
-      document.body.setAttribute('color-theme', 'light');
+      this.setTheme(false);
     }
   }
-
 
   setTheme(darkMode: boolean) {
+    // Configura el atributo 'color-theme' del cuerpo del documento según el modo elegido
+    document.body.setAttribute('color-theme', darkMode ? 'dark' : 'light');
 
-    if (darkMode) {
-      this.setTheme(darkMode)
-    } else {
-      this.setTheme(darkMode)
-    }
+    // Establece el valor del BehaviorSubject para notificar a los suscriptores sobre el cambio de tema
     this.darkMode.next(darkMode);
+
+    // Guarda el estado del modo oscuro en localStorage
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }
-
-
 }

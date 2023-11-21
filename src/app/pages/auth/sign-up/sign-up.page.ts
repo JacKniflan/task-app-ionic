@@ -36,7 +36,7 @@ export class SignUpPage implements OnInit {
     this.form.controls.confirmPassword.updateValueAndValidity();
   }
 
-  submit() {
+  submit() { //Función para registrar un usuario en firebase y guardar en el local storage el usuario
     if (this.form.valid) {
 
       this.utilsSvc.presentLoading({ message: 'Registrando...' });
@@ -44,17 +44,17 @@ export class SignUpPage implements OnInit {
         async (res) => {
           console.log(res);
 
-          await this.firebaseSvc.updateUser({ displayName: this.form.value.name });
+          await this.firebaseSvc.updateUser({ displayName: this.form.value.name }); //Actualizamos el nombre del usuario en firebase
 
-          let user: User = {
+          let user: User = {//Creamos un objeto de tipo usuario para guardar en el local storage y poder usarlo en la app
             uid: res.user.uid,
             name: res.user.displayName,
             email: res.user.email,
           }
 
 
-          this.utilsSvc.setElementInLocalStorage('user', user);
-          this.utilsSvc.routerLink('/tabs/home')
+          this.utilsSvc.setElementInLocalStorage('user', user); //Guardamos el usuario en el local storage para que no se cierre la sesión
+          this.utilsSvc.routerLink('/tabs/home')//Redireccionamos al home
 
 
 

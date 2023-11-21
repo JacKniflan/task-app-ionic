@@ -37,7 +37,7 @@ export class UtilsService {
   }
 
 
-  async presentToast(opts: ToastOptions) {
+  async presentToast(opts: ToastOptions) {//Toast sirve para mostrar un mensaje en la pantalla 
     const toast = await this.toastController.create(opts);
     toast.present();
   }
@@ -47,7 +47,7 @@ export class UtilsService {
     return this.router.navigateByUrl(url);
   }
 
-  //Alert sirve para mostrar un mensaje de alerta en la pantalla
+  //Alert sirve para mostrar un mensaje de alerta en la pantalla en caso de que el usuario no haya completado el formulario
   async presentAlert(opts: AlertOptions) {
     const alert = await this.alertController.create(opts);
 
